@@ -10,4 +10,4 @@ redirect_from:
 {% include base_path %}
 
 # Materials
-- 南京大学数学学院生存手册 [[PDF]](南京大学数学学院生存手册_250311.pdf)
+- 南京大学数学学院生存手册 [[repo]](https://github.com/Chenruishuo/NJU-Math-solver.git)
