@@ -1,0 +1,13 @@
+.author__avatar {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+  
+  img {
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+} 

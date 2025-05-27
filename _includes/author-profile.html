@@ -6,11 +6,11 @@
 
 <div itemscope itemtype="http://schema.org/Person">
 
-  <div class="author__avatar">
+  <div class="author__avatar" onclick="toggleAvatar(this)">
     {% if author.avatar contains "://" %}
-    	<img src="{{ author.avatar }}" alt="{{ author.name }}">
+    	<img src="{{ author.avatar }}?v={{ site.time | date: '%s' }}" alt="{{ author.name }}" class="profile-img">
     {% else %}
-    	<img src="{{ author.avatar | prepend: "/images/" | prepend: base_path }}" class="author__avatar" alt="{{ author.name }}">
+    	<img src="{{ author.avatar | prepend: "/images/" | prepend: base_path }}?v={{ site.time | date: '%s' }}" class="author__avatar profile-img" alt="{{ author.name }}">
     {% endif %}
   </div>
 
@@ -19,6 +19,21 @@
     {% if author.pronouns %}<p class="author__pronouns">{{ author.pronouns }}</p>{% endif %}
     {% if author.bio %}<p class="author__bio">{{ author.bio }}</p>{% endif %}
   </div>
+
+  <script>
+    function toggleAvatar(element) {
+      const img = element.querySelector('img');
+      const currentSrc = img.src;
+      const basePath = "{{ base_path }}";
+      const timestamp = new Date().getTime();
+      
+      if (currentSrc.includes('profile.png')) {
+        img.src = basePath + '/images/profile2.png?v=' + timestamp;
+      } else {
+        img.src = basePath + '/images/profile.png?v=' + timestamp;
+      }
+    }
+  </script>
 
   <div class="author__urls-wrapper">
     <button class="btn btn--inverse">Follow</button>
