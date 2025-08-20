@@ -25,7 +25,7 @@ author:
   avatar           : "profile.png"
   name             : "Ruishuo Chen"
   pronouns         : # example: "she/her"  
-  bio              : "An incoming M.Sc. student @ IIIS, Tsinghua University"
+  bio              : "An M.Sc. student @ IIIS, Tsinghua University"
   location         : "Earth"
   employer         : "Nanjing University"
   uri              : # URL
@@ -80,11 +80,11 @@ publication_category:
   books:
     title: 'Books'
   manuscripts:
-    title: 'Journal Articles' 
-  preprints:
-    title: 'Preprints'   
+    title: 'Journal Articles'    
   conferences:
     title: 'Conference Papers'
+  preprints:
+    title: 'Preprints'
   
 
 # Site Settings

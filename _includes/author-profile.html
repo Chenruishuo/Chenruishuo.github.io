@@ -21,16 +21,21 @@
   </div>
 
   <script>
+    // 预加载图片
+    const basePath = "{{ base_path }}";
+    const profile1 = new Image();
+    const profile2 = new Image();
+    profile1.src = basePath + '/images/profile.png';
+    profile2.src = basePath + '/images/profile2.png';
+
     function toggleAvatar(element) {
       const img = element.querySelector('img');
       const currentSrc = img.src;
-      const basePath = "{{ base_path }}";
-      const timestamp = new Date().getTime();
-      
-      if (currentSrc.includes('profile.png')) {
-        img.src = basePath + '/images/profile2.png?v=' + timestamp;
+
+      if (currentSrc.includes('profile2.png')) {
+        img.src = profile1.src + '?v=' + new Date().getTime();
       } else {
-        img.src = basePath + '/images/profile.png?v=' + timestamp;
+        img.src = profile2.src + '?v=' + new Date().getTime();
       }
     }
   </script>

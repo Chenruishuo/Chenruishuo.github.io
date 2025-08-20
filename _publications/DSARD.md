@@ -2,11 +2,11 @@
 title: "Statistical Analyses of Solar Active Region in SDO/HMI Magnetograms detected by Unsupervised Machine Learning Method DSARD"
 authors: "<span style='color: #007bff; font-weight: bold;'>Ruishuo Chen*</span>, Wutong Lu*, Qi Hao, Yifan Meng, Pengfei Chen, and Chenxi Shi"
 collection: publications
-category: preprints
+category: manuscripts
 permalink: /publication/DSARD
 excerpt: 'DSARD: An automated unsupervised method for solar active region detection in SDO/HMI magnetograms.'
 date: 2025-02-25
-venue: "In submission"
+venue: "ApJS (IF>8.5)"
 venue_short:
 paperurl: "https://arxiv.org/pdf/2502.17990"
 codeurl: "https://github.com/Chenruishuo/DSARD.git"
