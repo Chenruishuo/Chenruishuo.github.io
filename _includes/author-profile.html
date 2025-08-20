@@ -6,7 +6,7 @@
 
 <div itemscope itemtype="http://schema.org/Person">
 
-  <div class="author__avatar" onclick="toggleAvatar(this)">
+  <div class="author__avatar">
     {% if author.avatar contains "://" %}
     	<img src="{{ author.avatar }}?v={{ site.time | date: '%s' }}" alt="{{ author.name }}" class="profile-img">
     {% else %}
@@ -21,23 +21,82 @@
   </div>
 
   <script>
-    // 预加载图片
-    const basePath = "{{ base_path }}";
-    const profile1 = new Image();
-    const profile2 = new Image();
-    profile1.src = basePath + '/images/profile.png';
-    profile2.src = basePath + '/images/profile2.png';
+    (function() {
+      const basePath = "{{ base_path }}";
+      const fallback1 = basePath + '/images/profile.png';
+      const fallback2 = basePath + '/images/profile2.png';
 
-    function toggleAvatar(element) {
-      const img = element.querySelector('img');
-      const currentSrc = img.src;
-
-      if (currentSrc.includes('profile2.png')) {
-        img.src = profile1.src + '?v=' + new Date().getTime();
-      } else {
-        img.src = profile2.src + '?v=' + new Date().getTime();
+      // Helper: strip querystring for comparisons
+      function stripQuery(url) {
+        try { return url.split('?')[0]; } catch (e) { return url; }
       }
-    }
+
+      // Preload helper with error callback
+      function preload(url) {
+        const img = new Image();
+        img.src = url;
+        return img;
+      }
+
+      // Initialize all avatar containers on the page
+      document.querySelectorAll('.author__avatar').forEach(container => {
+        const img = container.querySelector('img');
+        if (!img) return;
+
+        // Normalize current src (remove cachebust)
+        const orig = img.getAttribute('src') || '';
+        const clean = stripQuery(orig);
+
+        // Store two variants: A = original, B = other profile image
+        img.dataset.avatarA = clean;
+        img.dataset.avatarB = (clean.includes('profile2.png') || clean.includes('profile2')) ? fallback1 : fallback2;
+
+        // Preload both images (best-effort)
+        const pA = preload(img.dataset.avatarA);
+        const pB = preload(img.dataset.avatarB);
+
+        // If preloaded images fail, attempt to use the other as fallback
+        pA.onerror = function() {
+          // if avatarA failed and avatarB exists, switch dataset so toggle still works
+          if (!img.dataset.avatarA || img.dataset.avatarA === '') img.dataset.avatarA = img.dataset.avatarB;
+        };
+        pB.onerror = function() {
+          // no-op; we'll try to revert on click error
+        };
+
+        // Track which variant is currently shown (A or B)
+        img.dataset.current = (stripQuery(orig) === img.dataset.avatarA) ? 'A' : 'B';
+
+        // Make container clearly clickable
+        container.style.cursor = 'pointer';
+
+        // Click handler: swap to the other avatar, with a cache-busting query so browsers request new content if needed.
+        container.addEventListener('click', function() {
+          const nextKey = img.dataset.current === 'A' ? 'B' : 'A';
+          const nextUrl = img.dataset['avatar' + nextKey];
+          if (!nextUrl) return;
+
+          const cacheBust = '?v=' + Date.now();
+          // Temporarily set the src to the preloaded image if already loaded, otherwise set and handle errors
+          img.src = nextUrl + cacheBust;
+          // flip the state optimistically
+          img.dataset.current = nextKey;
+
+          // If the image fails to load, revert state and try the other image as fallback
+          function onError() {
+            // revert state
+            img.dataset.current = (img.dataset.current === 'A') ? 'B' : 'A';
+            // remove this handler
+            img.removeEventListener('error', onError);
+            // try falling back to the other image (without infinite loop)
+            const fallback = (img.dataset.current === 'A') ? img.dataset.avatarA : img.dataset.avatarB;
+            if (fallback) img.src = fallback + '?v=' + Date.now();
+          }
+
+          img.addEventListener('error', onError);
+        });
+      });
+    })();
   </script>
 
   <div class="author__urls-wrapper">
